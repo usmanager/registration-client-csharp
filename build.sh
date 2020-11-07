@@ -5,7 +5,7 @@
 
 frameworkVersion=net45
 
-# sdk must match installed framworks under PREFIX/lib/mono/[value]
+# sdk must match installed frameworks under PREFIX/lib/mono/[value]
 sdk=4.5.2-api
 
 # langversion refers to C# language features. see man mcs for details.
@@ -39,7 +39,7 @@ if ! type nuget &>/dev/null; then
     nuget_cmd="mono nuget.exe"
 fi
 
-mozroots --import --sync
+cert-sync --user https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt
 ${nuget_cmd} install src/Pt.Unl.Fct.Miei.Usmanagement.Manager/packages.config -o packages;
 
 echo "[INFO] Copy DLLs to the 'bin' folder"
@@ -48,15 +48,15 @@ cp packages/Newtonsoft.Json.10.0.3/lib/net45/Newtonsoft.Json.dll bin/Newtonsoft.
 cp packages/RestSharp.105.1.0/lib/net45/RestSharp.dll bin/RestSharp.dll;
 cp packages/JsonSubTypes.1.2.0/lib/net45/JsonSubTypes.dll bin/JsonSubTypes.dll
 
-echo "[INFO] Run 'mcs' to build bin/Pt.Unl.Fct.Miei.Usmanagement.Manager.dll"
+echo "[INFO] Run 'mcs' to build bin/registration-client-csharp.dll"
 mcs -langversion:${langversion} -sdk:${sdk} -r:bin/Newtonsoft.Json.dll,bin/JsonSubTypes.dll,\
 bin/RestSharp.dll,\
 System.ComponentModel.DataAnnotations.dll,\
 System.Runtime.Serialization.dll \
 -target:library \
--out:bin/Pt.Unl.Fct.Miei.Usmanagement.Manager.dll \
+-out:bin/registration-client-csharp.dll \
 -recurse:'src/Pt.Unl.Fct.Miei.Usmanagement.Manager/*.cs' \
--doc:bin/Pt.Unl.Fct.Miei.Usmanagement.Manager.xml \
+-doc:bin/registration-client-csharp.xml \
 -platform:anycpu
 
 if [ $? -ne 0 ]
@@ -64,5 +64,5 @@ then
   echo "[ERROR] Compilation failed with exit code $?"
   exit 1
 else
-  echo "[INFO] bin/Pt.Unl.Fct.Miei.Usmanagement.Manager.dll was created successfully"
+  echo "[INFO] bin/registration-client-csharp.dll was created successfully"
 fi
